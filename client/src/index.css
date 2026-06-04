@@ -1,0 +1,76 @@
+@import './legacy-modelo.css';
+@import './legacy-paginas.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.field-error {
+  color: #9b1c1c;
+  font-size: 13px;
+  line-height: 1.45;
+  margin-top: 6px;
+}
+
+.form-status {
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  line-height: 1.5;
+  margin-top: var(--space-4);
+  padding: 12px 14px;
+}
+
+.form-status--success {
+  background: rgba(156, 204, 48, .16);
+  color: var(--green-ink);
+}
+
+.form-status--error {
+  background: rgba(155, 28, 28, .10);
+  color: #9b1c1c;
+}
+
+.form-card [aria-invalid="true"] {
+  border-color: #9b1c1c;
+}
+
+.not-found {
+  min-height: 55vh;
+}
+
+/* Oculto visualmente pero disponible para lectores de pantalla (anuncios de ruta). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* main recibe foco programático al navegar; no debe mostrar anillo de foco. */
+#main:focus {
+  outline: none;
+}
+
+/* Bloquea el scroll del fondo mientras el menú móvil está abierto. */
+body.menu-open {
+  overflow: hidden;
+}
+
+/* El trigger "Servicios" es un <button>; con preflight de Tailwind desactivado hay que
+   neutralizar los estilos nativos para que se vea como un enlace de navegación. */
+.nav .dd > button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-reveal {
+    animation: none !important;
+  }
+}
