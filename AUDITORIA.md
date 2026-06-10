@@ -133,7 +133,7 @@ El proyecto está **bien construido en lo esencial**: seguridad madura, base de 
 | # | Hallazgo original | Estado |
 |---|-------------------|--------|
 | 🔴1 | Clon duplicado `CONTALFA-WEB/` | ✅ Resuelto — ya no existe |
-| 🔴2 | SPA sin SSR/prerender | 🟡 Mitigado — `index.html` ahora sirve title/description/OG/JSON-LD del Home a bots sin JS. El prerender por ruta sigue pendiente (mayor impacto SEO restante) |
+| 🔴2 | SPA sin SSR/prerender | ✅ Resuelto — prerender SSG en build (2026-06-10): las 9 rutas + 404 emitidas como HTML estático con metas y contenido por ruta (ver Seguimiento 2026-06-10) |
 | 🔴3 | Backend "miente" (leads perdidos en silencio) | ✅ Resuelto — 503 si SMTP falta, fail-fast al arrancar en producción, health reporta `mail: ready\|unconfigured` |
 | 🔴4 | `aria-labelledby` roto en 5 secciones | ✅ Resuelto — `SectionHead` emite el `id` |
 | 🔴5 | Sin code-splitting | ✅ Resuelto — `React.lazy` + `Suspense` por ruta |
@@ -167,11 +167,29 @@ El proyecto está **bien construido en lo esencial**: seguridad madura, base de 
 
 ## Pendiente (por impacto)
 
-1. **Prerender/SSG por ruta** — el item SEO de mayor impacto restante (Bing/bots sociales solo ven el Home).
-2. **CI mínimo** — GitHub Actions: install + lint + test + build en cada push.
-3. Imágenes WebP/AVIF con `srcset` (hoy JPG 90-150 KB).
-4. CSP en el host estático/CDN (helmet solo cubre `/api/*`).
-5. OG image de marca 1200×630 (hoy foto stock compartida).
-6. Decisión Tailwind vs CSS legacy documentada (ADR) + consolidar tokens duplicados.
-7. Menores: title del Home ~80 car., listas de "sistemas propios" en 3 sitios, un `IntersectionObserver` por `<Reveal>`.
+~~1. Prerender/SSG por ruta~~ → ✅ resuelto el 2026-06-10 (ver abajo).
+~~2. CI mínimo~~ → ✅ resuelto: `.github/workflows/ci.yml` (lint server+client, tests, build con prerender en cada push/PR).
+
+1. Imágenes WebP/AVIF con `srcset` (hoy JPG 90-150 KB).
+2. CSP en el host estático/CDN (helmet solo cubre `/api/*`).
+3. OG image de marca 1200×630 (hoy foto stock compartida).
+4. Decisión Tailwind vs CSS legacy documentada (ADR) + consolidar tokens duplicados.
+5. Menores: title del Home ~80 car., listas de "sistemas propios" en 3 sitios, un `IntersectionObserver` por `<Reveal>`.
+
+---
+
+# Seguimiento — 2026-06-10
+
+## Prerender/SSG por ruta (cierra 🔴2)
+
+Implementado **sin dependencias nuevas** (restricción supply-chain). `npm run build` del cliente encadena: build normal → build SSR (`src/entry-server.jsx` → `dist-server/`, artefacto intermedio que se borra al final) → `scripts/prerender.mjs`.
+
+- **Render:** `prerender` de `react-dom/static` (React 19) + `StaticRouter`. Espera a los `React.lazy`, así el HTML llega completo y no con el fallback de `<Suspense>`. **`progressiveChunkSize: 1 MB` es imprescindible:** con el umbral por defecto (~12 kB) React emite las páginas grandes (Home) como fallback visible + contenido en `<div hidden>` + script de swap — inútil para bots sin JS e incompatible con una futura CSP sin inline scripts. Verificado: cero `<script>` en el `<body>` de todos los HTML generados.
+- **Metas por ruta sin duplicar fuentes:** `seo-meta.js` centraliza `computeSeoMeta()` (la usa `SEO.jsx` contra el DOM) y un contexto colector (`SeoCollectorContext`) captura durante el prerender exactamente lo que cada página declara con `<SEO>` — los valores salen de `data/seo.js` y `data/services.js`, sin mapa ruta→meta paralelo que pueda desincronizarse.
+- **Inyección validada:** el script reemplaza title/description/robots/canonical/og/twitter sobre la plantilla `dist/index.html` exigiendo exactamente 1 coincidencia por tag; si `index.html` cambia de forma, el build (y CI) falla en vez de publicar metas a medias.
+- **Salida (18 archivos):** doble formato por ruta — `ruta/index.html` (índice de directorio: nginx, Netlify, GitHub Pages) y gemelo plano `ruta.html` (hosts tipo sirv/serve, incluido `vite preview`); la canonical absorbe la URL duplicada. Más `404.html` (NotFound con `noindex`) para hosts que lo sirven en URLs desconocidas.
+- **Hidratación:** `main.jsx` usa `hydrateRoot` cuando el root llega con contenido; conserva `createRoot` en dev.
+- **Verificación:** title/description/canonical/og:url correctos por ruta en los 10 documentos · 9 URLs limpias servidas con su HTML propio en `vite preview` · cero marcadores de Suspense pendientes/scripts de swap · lint limpio.
+
+**Nota deploy:** en URLs desconocidas el fallback SPA devuelve el Home prerenderizado y React lo reemplaza al hidratar (warning de hidratación en consola, inofensivo). Si el host soporta `404.html` (Netlify/GitHub Pages), sirve el NotFound estático y no hay warning.
 

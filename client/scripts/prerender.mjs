@@ -79,10 +79,20 @@ for (const { url, outFile } of routes) {
   let html = applyMeta(template, meta);
   html = replaceOne(html, /<div id="root"><\/div>/, () => `<div id="root">${appHtml}</div>`, '#root');
 
-  const target = path.join(distDir, outFile);
-  await mkdir(path.dirname(target), { recursive: true });
-  await writeFile(target, html, 'utf8');
-  console.log(`prerender ${url} -> dist/${outFile} · ${meta.title}`);
+  // Doble formato por ruta: `ruta/index.html` (índice de directorio: nginx, Netlify,
+  // GitHub Pages) y gemelo plano `ruta.html` (hosts tipo sirv/serve, incluido
+  // `vite preview`, que resuelven /ruta -> ruta.html pero no ruta/index.html). La
+  // canonical absorbe la URL duplicada con/sin barra final.
+  const targets = [outFile];
+  if (url !== '/' && outFile.endsWith('/index.html')) {
+    targets.push(`${url.slice(1)}.html`);
+  }
+  for (const relativePath of targets) {
+    const target = path.join(distDir, relativePath);
+    await mkdir(path.dirname(target), { recursive: true });
+    await writeFile(target, html, 'utf8');
+  }
+  console.log(`prerender ${url} -> ${targets.map((file) => `dist/${file}`).join(' + ')} · ${meta.title}`);
 }
 
 // El bundle SSR es un artefacto intermedio del build; no debe llegar al deploy.
