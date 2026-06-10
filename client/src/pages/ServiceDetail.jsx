@@ -46,7 +46,7 @@ export function ServiceDetail() {
         <div className="wrap">
           <div className="split split--media">
             <Reveal as="figure" className="media">
-              <img src={service.image} alt={service.imageAlt} loading="lazy" />
+              <img src={service.image} alt={service.imageAlt} width="1300" height="900" loading="lazy" />
             </Reveal>
             <Reveal className="prose">
               <span className="kicker">Cercanía</span>

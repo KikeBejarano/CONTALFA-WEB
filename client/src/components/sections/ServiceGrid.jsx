@@ -7,7 +7,7 @@ export function ServiceGrid({ showGateway = false }) {
   return (
     <section id="servicios" aria-labelledby="servicios-h2" data-screen-label="04 Servicios">
       <div className="wrap wrap--wide">
-        <SectionHead overline="Qué hacemos" title="Una sola firma, cuatro frentes de cumplimiento." linkTo={showGateway ? '/servicios' : undefined} linkText="Ver todos los servicios">
+        <SectionHead id="servicios-h2" overline="Qué hacemos" title="Una sola firma, cuatro frentes de cumplimiento." linkTo={showGateway ? '/servicios' : undefined} linkText="Ver todos los servicios">
           Asumimos su back office completo —contable, fiscal, laboral y legal— bajo un mismo criterio y un mismo responsable.
         </SectionHead>
         <Reveal className="serv-grid" stagger>

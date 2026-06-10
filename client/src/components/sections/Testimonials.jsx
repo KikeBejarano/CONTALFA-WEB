@@ -11,7 +11,7 @@ export function Testimonials() {
   return (
     <section id="prueba" aria-labelledby="prueba-h2" data-screen-label="07 Prueba social">
       <div className="wrap wrap--wide">
-        <SectionHead overline="Quienes ya descansan en nosotros" title="La permanencia no se declara: se acredita." />
+        <SectionHead id="prueba-h2" overline="Quienes ya descansan en nosotros" title="La permanencia no se declara: se acredita." />
         <Reveal className="testi-grid" stagger>
           {testimonials.map(([name, role, quote]) => (
             <figure className="testi" key={role}>

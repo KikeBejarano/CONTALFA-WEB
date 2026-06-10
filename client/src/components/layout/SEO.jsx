@@ -1,60 +1,49 @@
+import { useContext, useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { computeSeoMeta, SeoCollectorContext, SITE_NAME } from './seo-meta.js';
 
-// React 19 eleva automáticamente <title>/<meta>/<link> al <head>; no hace falta react-helmet.
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://contalfa.com';
-const SITE_NAME = 'Contalfa';
-const DEFAULT_IMAGE = '/assets/img/corp-6950031.jpg';
+function setContent(selector, value) {
+  const element = document.querySelector(selector);
+  if (element) element.setAttribute('content', value);
+}
 
-const organizationJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'AccountingService',
-  name: 'Contalfa S.C.',
-  description:
-    'Firma contable, fiscal, de nómina y derecho corporativo para empresas venezolanas. Desde 1964.',
-  url: SITE_URL,
-  email: 'info@contalfa.com',
-  telephone: '+582122051911',
-  foundingDate: '1964',
-  areaServed: 'VE',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: 'C.C. Macaracuay Plaza, Piso 3, Torre B, Urb. Macaracuay',
-    addressLocality: 'Caracas',
-    addressCountry: 'VE',
-  },
-  openingHoursSpecification: {
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '08:00',
-    closes: '17:00',
-  },
-};
+function setHref(selector, value) {
+  const element = document.querySelector(selector);
+  if (element) element.setAttribute('href', value);
+}
 
-export function SEO({ title, description, image = DEFAULT_IMAGE }) {
+export function SEO({ title, description, image, noindex = false }) {
   const { pathname } = useLocation();
-  const canonical = `${SITE_URL}${pathname}`;
-  const imageUrl = image.startsWith('http') ? image : `${SITE_URL}${image}`;
 
-  return (
-    <>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <link rel="canonical" href={canonical} />
+  // Durante el prerender no hay DOM: el colector captura las metas para inyectarlas en
+  // el HTML estático. Llamarlo en render es seguro: el valor es una función pura de las
+  // props por ruta, y en el navegador el colector no existe.
+  const collectSeoMeta = useContext(SeoCollectorContext);
+  if (collectSeoMeta) {
+    collectSeoMeta(computeSeoMeta({ title, description, image, noindex, pathname }));
+  }
 
-      <meta property="og:type" content="website" />
-      <meta property="og:site_name" content={SITE_NAME} />
-      <meta property="og:locale" content="es_VE" />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:url" content={canonical} />
-      <meta property="og:image" content={imageUrl} />
+  useLayoutEffect(() => {
+    const meta = computeSeoMeta({ title, description, image, noindex, pathname });
 
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={imageUrl} />
+    document.title = meta.title;
+    setContent('meta[name="description"]', meta.description);
+    setContent('meta[name="robots"]', meta.robots);
+    setHref('link[rel="canonical"]', meta.canonical);
 
-      <script type="application/ld+json">{JSON.stringify(organizationJsonLd)}</script>
-    </>
-  );
+    setContent('meta[property="og:type"]', 'website');
+    setContent('meta[property="og:site_name"]', SITE_NAME);
+    setContent('meta[property="og:locale"]', 'es_VE');
+    setContent('meta[property="og:title"]', meta.title);
+    setContent('meta[property="og:description"]', meta.description);
+    setContent('meta[property="og:url"]', meta.canonical);
+    setContent('meta[property="og:image"]', meta.image);
+
+    setContent('meta[name="twitter:card"]', 'summary_large_image');
+    setContent('meta[name="twitter:title"]', meta.title);
+    setContent('meta[name="twitter:description"]', meta.description);
+    setContent('meta[name="twitter:image"]', meta.image);
+  }, [description, image, noindex, pathname, title]);
+
+  return null;
 }

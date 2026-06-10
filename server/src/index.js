@@ -1,68 +1,51 @@
 import 'dotenv/config';
-import cors from 'cors';
-import express from 'express';
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit';
-import contactRouter from './routes/contact.js';
+import { createApp } from './app.js';
+import { loadConfig } from './config.js';
+import { logger } from './lib/logger.js';
+import { closeMailer } from './lib/mailer.js';
 
-const app = express();
-const port = Number(process.env.PORT || 3001);
+const config = loadConfig();
 
-// Confianza en proxies: número de saltos reales delante de la app (Nginx/Cloudflare/Render).
-// Nunca usar `true` en público sin proxy: permitiría falsear X-Forwarded-For y evadir el rate-limit.
-app.set('trust proxy', Number(process.env.TRUST_PROXY || 0));
-app.disable('x-powered-by');
-
-app.use(helmet());
-
-// CORS restringido a orígenes conocidos. Sin Origin (curl/health) se permite; orígenes no listados se bloquean.
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'https://contalfa.com,https://www.contalfa.com')
-  .split(',')
-  .map((value) => value.trim())
-  .filter(Boolean);
-
-app.use(cors({
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Origen no permitido'));
-  },
-  methods: ['GET', 'POST'],
-  maxAge: 86400
-}));
-
-app.use(express.json({ limit: '32kb' }));
-
-const contactLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { ok: false, errors: { form: 'Demasiados intentos. Inténtelo más tarde.' } }
-});
-
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true });
-});
-
-app.use('/api/contact', contactLimiter, contactRouter);
-
-app.use((_req, res) => {
-  res.status(404).json({ ok: false, errors: { route: 'Ruta no encontrada.' } });
-});
-
-// eslint-disable-next-line no-unused-vars -- Express identifica el handler de error por su firma de 4 argumentos.
-app.use((err, _req, res, _next) => {
-  if (err?.message === 'Origen no permitido') {
-    return res.status(403).json({ ok: false, errors: { cors: 'Origen no permitido.' } });
+// Fail-fast: en producción, arrancar sin SMTP significa perder leads en silencio.
+// Mejor negarse a arrancar y que el deploy falle de forma visible.
+if (config.missingSmtpKeys.length > 0) {
+  const message = `Faltan variables SMTP: ${config.missingSmtpKeys.join(', ')}`;
+  if (config.isProduction) {
+    logger.error(`[server] ${message}. Abortando arranque.`);
+    process.exit(1);
   }
-  console.error('[server error]', err?.message || err);
-  return res.status(500).json({ ok: false, errors: { form: 'Error interno.' } });
-});
+  logger.warn(`[server] ${message}. /api/contact responderá 503 hasta configurarlas.`);
+}
 
-const server = app.listen(port, () => {
-  console.log(`Contalfa API listening on http://localhost:${port}`);
+const app = createApp();
+
+const server = app.listen(config.port, () => {
+  logger.info(`Contalfa API escuchando en http://localhost:${config.port}`);
 });
 
 // Corta requests colgadas (p. ej. SMTP lento) para no agotar conexiones.
 server.requestTimeout = 15000;
 server.headersTimeout = 16000;
+
+let shuttingDown = false;
+
+function shutdown(signal) {
+  if (shuttingDown) return;
+  shuttingDown = true;
+  logger.info(`[server] ${signal} recibido; cerrando conexiones.`);
+
+  const forceExit = setTimeout(() => {
+    logger.error('[server] cierre forzado tras timeout.');
+    process.exit(1);
+  }, 10000);
+  forceExit.unref();
+
+  server.close(() => {
+    closeMailer();
+    clearTimeout(forceExit);
+    process.exit(0);
+  });
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));

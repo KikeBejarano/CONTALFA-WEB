@@ -16,7 +16,7 @@ export function StatsGrid() {
   return (
     <section id="cifras" aria-labelledby="cifras-h2" data-screen-label="02 Cifras">
       <div className="wrap wrap--wide">
-        <SectionHead overline="Lo que sostiene la confianza" title="La permanencia no se declara: se acredita." />
+        <SectionHead id="cifras-h2" overline="Lo que sostiene la confianza" title="La permanencia no se declara: se acredita." />
         <Reveal className="stats-grid" stagger>
           <Stat pre="+" target={60} label="Años ejerciendo en Venezuela — hemos visto cada reforma fiscal." />
           <Stat pre="+" target={1000} sep label="Empresas que confían su cumplimiento a la firma." />

@@ -7,7 +7,7 @@ export function TeamSection() {
       <div className="wrap wrap--wide">
         <div className="equipo-grid">
           <Reveal as="figure" className="equipo-foto">
-            <img src="/assets/img/corp-7433853.jpg" alt="Equipo de Contalfa trabajando en la oficina" loading="lazy" />
+            <img src="/assets/img/corp-7433853.jpg" alt="Equipo de Contalfa trabajando en la oficina" width="1300" height="900" loading="lazy" />
           </Reveal>
           <Reveal className="equipo-copy">
             <span className="overline">Cercanía</span>

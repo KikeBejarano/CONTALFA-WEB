@@ -1,24 +1,27 @@
 import nodemailer from 'nodemailer';
+import { getMissingSmtpKeys } from '../config.js';
+import { buildLeadEmail } from './lead-email.js';
 
-const requiredSmtpKeys = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'MAIL_TO'];
+// Transporter singleton con pool: un solo handshake TLS reutilizado entre envíos.
+let transporter;
 
-function hasSmtpConfig() {
-  return requiredSmtpKeys.every((key) => Boolean(process.env[key]));
+function assertSmtpConfig() {
+  const missing = getMissingSmtpKeys();
+  if (missing.length === 0) return;
+
+  const error = new Error(`SMTP no configurado: faltan ${missing.join(', ')}`);
+  error.code = 'SMTP_NOT_CONFIGURED';
+  error.missing = missing;
+  throw error;
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
+function getTransporter() {
+  if (transporter) return transporter;
+  assertSmtpConfig();
 
-function createTransporter() {
   const port = Number(process.env.SMTP_PORT || 587);
 
-  return nodemailer.createTransport({
+  transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port,
     secure: port === 465,
@@ -33,40 +36,14 @@ function createTransporter() {
     pool: true,
     maxConnections: 3
   });
+
+  return transporter;
 }
 
 export async function sendLead(data) {
-  const subject = `Nuevo contacto web: ${data.nombre}`;
-  const text = [
-    `Nombre: ${data.nombre}`,
-    `Empresa: ${data.empresa}`,
-    `Correo: ${data.correo}`,
-    `Teléfono: ${data.telefono || 'No indicado'}`,
-    `Servicio: ${data.servicio}`,
-    '',
-    data.mensaje
-  ].join('\n');
+  const { subject, text, html } = buildLeadEmail(data);
 
-  const html = `
-    <h2>Nuevo contacto desde contalfa.com</h2>
-    <p><strong>Nombre:</strong> ${escapeHtml(data.nombre)}</p>
-    <p><strong>Empresa:</strong> ${escapeHtml(data.empresa)}</p>
-    <p><strong>Correo:</strong> ${escapeHtml(data.correo)}</p>
-    <p><strong>Teléfono:</strong> ${escapeHtml(data.telefono || 'No indicado')}</p>
-    <p><strong>Servicio:</strong> ${escapeHtml(data.servicio)}</p>
-    <p><strong>Mensaje:</strong></p>
-    <p>${escapeHtml(data.mensaje).replaceAll('\n', '<br>')}</p>
-  `;
-
-  if (!hasSmtpConfig()) {
-    // Sin SMTP no se entrega el lead. No volcamos PII (correo/teléfono/mensaje) a los logs;
-    // solo dejamos constancia del evento para diagnóstico.
-    console.warn('[contact] SMTP no configurado; lead NO entregado', { servicio: data.servicio });
-    return { mode: 'log' };
-  }
-
-  const transporter = createTransporter();
-  const result = await transporter.sendMail({
+  const result = await getTransporter().sendMail({
     from: `"Contalfa Web" <${process.env.SMTP_USER}>`,
     replyTo: data.correo,
     to: process.env.MAIL_TO,
@@ -76,4 +53,10 @@ export async function sendLead(data) {
   });
 
   return { mode: 'smtp', messageId: result.messageId };
+}
+
+export function closeMailer() {
+  if (!transporter) return;
+  transporter.close();
+  transporter = undefined;
 }

@@ -21,7 +21,7 @@ export function Layout({ children }) {
       return;
     }
     mainRef.current?.focus();
-    // document.title ya fue actualizado por <SEO> (metadata nativa de React 19).
+    // document.title ya fue actualizado por <SEO> (useLayoutEffect, antes del paint).
     if (announceRef.current) announceRef.current.textContent = document.title;
   }, [pathname]);
 

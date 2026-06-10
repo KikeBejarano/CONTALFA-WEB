@@ -38,6 +38,14 @@
   min-height: 55vh;
 }
 
+.route-loading {
+  min-height: 55vh;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 16px;
+}
+
 /* Oculto visualmente pero disponible para lectores de pantalla (anuncios de ruta). */
 .sr-only {
   position: absolute;

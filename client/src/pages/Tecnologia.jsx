@@ -28,7 +28,7 @@ export function Tecnologia() {
               <p>No adaptamos un paquete genérico a la fuerza ni dependemos de un proveedor externo para resolver lo que cambia cada año en el país. Cuando la norma se mueve, ajustamos el sistema.</p>
             </Reveal>
             <Reveal as="figure" className="media">
-              <img src="/assets/img/corp-6949934.jpg" alt="Tecnología contable de Contalfa" loading="lazy" />
+              <img src="/assets/img/corp-6949934.jpg" alt="Tecnología contable de Contalfa" width="1300" height="900" loading="lazy" />
             </Reveal>
           </div>
         </div>

@@ -19,7 +19,7 @@ export function Hero() {
           <div className="hero-stage" aria-hidden="true">
             <figure className="brand-plate">
               <span className="bp-kicker">Firma contable</span>
-              <div className="bp-mark"><img src="/assets/logos/alfa_2.png" alt="" width="250" height="170" /></div>
+              <div className="bp-mark"><img src="/assets/logos/alfa_2.png" alt="" width="859" height="559" /></div>
               <span className="bp-rule"></span>
               <figcaption className="bp-cap">Fundada en 1964 · Caracas, Venezuela</figcaption>
             </figure>

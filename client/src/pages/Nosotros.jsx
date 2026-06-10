@@ -20,7 +20,7 @@ export function Nosotros() {
               <p>Hoy somos un solo responsable del <strong>back office</strong> de nuestros clientes: contabilidad, impuestos, nómina y derecho corporativo, coordinados de verdad bajo un mismo techo.</p>
             </Reveal>
             <Reveal as="figure" className="media media--tall">
-              <img src="/assets/img/corp-7433853.jpg" alt="Equipo Contalfa" loading="lazy" />
+              <img src="/assets/img/corp-7433853.jpg" alt="Equipo Contalfa" width="1300" height="900" loading="lazy" />
               <figcaption>Contalfa · Caracas</figcaption>
             </Reveal>
           </div>

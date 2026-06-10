@@ -7,7 +7,7 @@ export function Footer() {
       <div className="wrap wrap--wide">
         <div className="foot-grid">
           <div className="foot-col foot-brand">
-            <div className="wm"><img src="/assets/logos/alfa_2.png" alt="" /><span>CONT<b>ALFA</b></span></div>
+            <div className="wm"><img src="/assets/logos/alfa_2.png" alt="" width="859" height="559" /><span>CONT<b>ALFA</b></span></div>
             <p className="foot-tag">Firma contable, fiscal, de nómina y derecho corporativo para empresas venezolanas. Desde 1964.</p>
             <address className="foot-addr">
               C.C. Macaracuay Plaza, Piso 3, Torre B<br />

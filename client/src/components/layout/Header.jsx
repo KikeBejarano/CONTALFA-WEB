@@ -58,7 +58,7 @@ export function Header({ menuOpen, setMenuOpen }) {
     <header id="site-header" className={`${scrolled ? 'scrolled' : ''} ${onDark ? 'on-dark' : ''}`.trim()}>
       <div className="header-inner">
         <Link className="logo" to="/" aria-label="Contalfa — inicio">
-          <img className="logo-sym" src="/assets/logos/alfa_2.png" alt="" />
+          <img className="logo-sym" src="/assets/logos/alfa_2.png" alt="" width="859" height="559" />
           <span className="wm">CONT<b>ALFA</b></span>
         </Link>
         <nav className="nav" aria-label="Navegación principal">

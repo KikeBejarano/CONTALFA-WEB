@@ -11,7 +11,7 @@ export function ProblemCards() {
   return (
     <section id="problema" aria-labelledby="problema-h2" data-screen-label="03 Problema">
       <div className="wrap wrap--wide">
-        <SectionHead overline="Lo que está en juego" title="El riesgo rara vez avisa. Cuando lo hace, ya es un reparo.">
+        <SectionHead id="problema-h2" overline="Lo que está en juego" title="El riesgo rara vez avisa. Cuando lo hace, ya es un reparo.">
           Para quien firma los estados financieros, una omisión no es un detalle: es una contingencia. Nuestro oficio es que usted nunca tenga que averiguarlo de la forma difícil.
         </SectionHead>
         <Reveal className="prob-grid" stagger>

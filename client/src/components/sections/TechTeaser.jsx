@@ -37,7 +37,7 @@ export function TechTeaser({ page = false }) {
             <p>La sub-marca <span className="alpha-word">alpha</span> reúne cinco sistemas desarrollados en casa, pensados para la realidad fiscal venezolana. No dependemos de terceros para resguardar lo suyo.</p>
           </Reveal>
           <Reveal className="tech-stage" aria-hidden="true">
-            <div className="alpha-emblem"><img src="/assets/logos/alpha_white.png" alt="" width="240" height="120" /></div>
+            <div className="alpha-emblem"><img src="/assets/logos/alpha_white.png" alt="" width="591" height="236" /></div>
           </Reveal>
         </div>
         <Reveal className="tech-cta">

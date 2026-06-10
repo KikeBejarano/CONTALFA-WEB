@@ -29,7 +29,7 @@ export function ProcessTimeline({ compact = false }) {
   return (
     <section id="proceso" aria-labelledby="proceso-h2" data-screen-label="05 Proceso">
       <div className="wrap wrap--wide">
-        <SectionHead overline="Cómo trabajamos" title="Hay método detrás de la tranquilidad.">
+        <SectionHead id="proceso-h2" overline="Cómo trabajamos" title="Hay método detrás de la tranquilidad.">
           Un acompañamiento ordenado, del primer diagnóstico al cumplimiento sostenido.
         </SectionHead>
         <div className="proc in" id="proc" ref={ref} data-reveal>
