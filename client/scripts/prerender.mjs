@@ -1,6 +1,7 @@
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { services } from '../src/data/services.js';
 
 // Prerender post-build: renderiza cada ruta con el bundle SSR (dist-server) y escribe
 // dist/<ruta>/index.html con el contenido y las metas de esa ruta, para que los
@@ -10,19 +11,18 @@ const clientDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..
 const distDir = path.join(clientDir, 'dist');
 const ssrDir = path.join(clientDir, 'dist-server');
 
-// `/404` no existe como ruta: renderiza NotFound (noindex). Hosts estáticos como
-// Netlify o GitHub Pages sirven 404.html en URLs desconocidas, evitando responder con
-// el Home prerenderizado.
+// `/404` no existe como ruta: renderiza NotFound (noindex, sin priority → fuera del
+// sitemap). Hosts estáticos como Netlify o GitHub Pages sirven 404.html en URLs
+// desconocidas, evitando responder con el Home prerenderizado.
+// Las rutas de servicios se derivan de data/services.js: añadir un servicio allá
+// lo incorpora aquí (y al sitemap) sin tocar este archivo.
 const routes = [
-  { url: '/', outFile: 'index.html' },
-  { url: '/servicios', outFile: 'servicios/index.html' },
-  { url: '/servicios/outsourcing', outFile: 'servicios/outsourcing/index.html' },
-  { url: '/servicios/impuestos', outFile: 'servicios/impuestos/index.html' },
-  { url: '/servicios/nomina', outFile: 'servicios/nomina/index.html' },
-  { url: '/servicios/derecho-corporativo', outFile: 'servicios/derecho-corporativo/index.html' },
-  { url: '/tecnologia', outFile: 'tecnologia/index.html' },
-  { url: '/nosotros', outFile: 'nosotros/index.html' },
-  { url: '/contacto', outFile: 'contacto/index.html' },
+  { url: '/', outFile: 'index.html', priority: '1.0' },
+  { url: '/servicios', outFile: 'servicios/index.html', priority: '0.9' },
+  ...services.map(({ slug }) => ({ url: `/servicios/${slug}`, outFile: `servicios/${slug}/index.html`, priority: '0.8' })),
+  { url: '/tecnologia', outFile: 'tecnologia/index.html', priority: '0.7' },
+  { url: '/nosotros', outFile: 'nosotros/index.html', priority: '0.7' },
+  { url: '/contacto', outFile: 'contacto/index.html', priority: '0.7' },
   { url: '/404', outFile: '404.html' },
 ];
 
@@ -67,7 +67,9 @@ function applyMeta(template, meta) {
 const template = await readFile(path.join(distDir, 'index.html'), 'utf8');
 const { render } = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href);
 
-for (const { url, outFile } of routes) {
+const sitemapEntries = [];
+
+for (const { url, outFile, priority } of routes) {
   const { html: appHtml, meta } = await render(url);
   if (!meta) {
     throw new Error(`Prerender: la ruta ${url} no declaró <SEO>; no hay metas que inyectar.`);
@@ -92,8 +94,23 @@ for (const { url, outFile } of routes) {
     await mkdir(path.dirname(target), { recursive: true });
     await writeFile(target, html, 'utf8');
   }
+  if (priority) {
+    sitemapEntries.push({ loc: meta.canonical, priority });
+  }
   console.log(`prerender ${url} -> ${targets.map((file) => `dist/${file}`).join(' + ')} · ${meta.title}`);
 }
+
+// Sitemap generado desde las mismas rutas y canonicals del prerender: imposible que
+// se desincronice de lo realmente publicado.
+const sitemap = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  ...sitemapEntries.map(({ loc, priority }) => `  <url>\n    <loc>${escapeHtml(loc)}</loc>\n    <priority>${priority}</priority>\n  </url>`),
+  '</urlset>',
+  '',
+].join('\n');
+await writeFile(path.join(distDir, 'sitemap.xml'), sitemap, 'utf8');
+console.log(`prerender sitemap.xml -> ${sitemapEntries.length} URLs`);
 
 // El bundle SSR es un artefacto intermedio del build; no debe llegar al deploy.
 await rm(ssrDir, { recursive: true, force: true });

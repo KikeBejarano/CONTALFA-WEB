@@ -1,5 +1,4 @@
 import { services } from '../../data/services.js';
-import { Reveal } from '../ui/Reveal.jsx';
 import { SectionHead } from '../ui/SectionHead.jsx';
 import { ServiceCard } from '../ui/ServiceCard.jsx';
 
@@ -10,9 +9,9 @@ export function ServiceGrid({ showGateway = false }) {
         <SectionHead id="servicios-h2" overline="Qué hacemos" title="Una sola firma, cuatro frentes de cumplimiento." linkTo={showGateway ? '/servicios' : undefined} linkText="Ver todos los servicios">
           Asumimos su back office completo —contable, fiscal, laboral y legal— bajo un mismo criterio y un mismo responsable.
         </SectionHead>
-        <Reveal className="serv-grid" stagger>
+        <div className="serv-grid">
           {services.map((service) => <ServiceCard key={service.slug} service={service} />)}
-        </Reveal>
+        </div>
       </div>
     </section>
   );

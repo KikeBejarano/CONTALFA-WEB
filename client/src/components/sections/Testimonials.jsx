@@ -1,4 +1,3 @@
-import { Reveal } from '../ui/Reveal.jsx';
 import { SectionHead } from '../ui/SectionHead.jsx';
 
 const testimonials = [
@@ -12,7 +11,7 @@ export function Testimonials() {
     <section id="prueba" aria-labelledby="prueba-h2" data-screen-label="07 Prueba social">
       <div className="wrap wrap--wide">
         <SectionHead id="prueba-h2" overline="Quienes ya descansan en nosotros" title="La permanencia no se declara: se acredita." />
-        <Reveal className="testi-grid" stagger>
+        <div className="testi-grid">
           {testimonials.map(([name, role, quote]) => (
             <figure className="testi" key={role}>
               <span className="mark" aria-hidden="true">“</span>
@@ -20,7 +19,7 @@ export function Testimonials() {
               <figcaption><div className="name">{name}</div><div className="role">{role}</div></figcaption>
             </figure>
           ))}
-        </Reveal>
+        </div>
       </div>
     </section>
   );

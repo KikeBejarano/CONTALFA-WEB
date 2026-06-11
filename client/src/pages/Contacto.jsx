@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { ContactIcon } from '../components/ui/Icons.jsx';
-import { Reveal } from '../components/ui/Reveal.jsx';
+import { apiUrl } from '../lib/api.js';
+import { ADDRESS_LINES, CONTACT_EMAIL, PHONE_DISPLAY, PHONE_TEL, SCHEDULE } from '../data/contact.js';
 import { seo } from '../data/seo.js';
+import { services } from '../data/services.js';
 
 // `website` es un honeypot: invisible para humanos; si llega con datos, el backend lo descarta.
 const initialForm = { nombre: '', empresa: '', correo: '', telefono: '', servicio: '', mensaje: '', website: '' };
-const services = ['Outsourcing contable', 'Impuestos y consultoría tributaria', 'Administración de nómina', 'Derecho corporativo', 'Aún no estoy seguro'];
+// Derivadas del catálogo para no mantener una copia a mano; deben seguir coincidiendo
+// con VALID_SERVICES del server (server/src/lib/validate.js).
+const serviceOptions = [...services.map((service) => service.title), 'Aún no estoy seguro'];
 const fieldOrder = ['nombre', 'empresa', 'correo', 'servicio', 'mensaje'];
 
 function focusFirstError(currentErrors) {
@@ -53,7 +57,7 @@ export function Contacto() {
 
     setStatus('sending');
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(apiUrl('/api/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
@@ -94,7 +98,7 @@ export function Contacto() {
       <section className="page-section">
         <div className="wrap">
           <div className="split split--media">
-            <Reveal className="form-card">
+            <div className="form-card">
               <form onSubmit={submit} noValidate>
                 {/* Honeypot anti-bot: oculto y fuera del orden de tabulación; un humano nunca lo rellena. */}
                 <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}>
@@ -109,7 +113,7 @@ export function Contacto() {
                   <label htmlFor="c-servicio">Servicio de interés</label>
                   <select {...fieldProps('servicio')} required>
                     <option value="">Seleccione una opción</option>
-                    {services.map((service) => <option key={service}>{service}</option>)}
+                    {serviceOptions.map((service) => <option key={service}>{service}</option>)}
                   </select>
                   {errors.servicio && <p className="field-error" id="c-servicio-error">{errors.servicio}</p>}
                 </div>
@@ -118,13 +122,13 @@ export function Contacto() {
                 <p className="micro">Le respondemos en menos de un día hábil. Lo que comparta se trata con absoluta reserva.</p>
                 <div aria-live="polite">{statusText && <p className={`form-status ${status === 'success' ? 'form-status--success' : 'form-status--error'}`}>{statusText}</p>}</div>
               </form>
-            </Reveal>
-            <Reveal className="contact-info">
-              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon /></span><div><b>Dirección</b><span>C.C. Macaracuay Plaza, Piso 3, Torre B<br />Urb. Macaracuay, Caracas</span></div></div>
-              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="mail" /></span><div><b>Correo</b><a href="mailto:info@contalfa.com">info@contalfa.com</a></div></div>
-              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="phone" /></span><div><b>Teléfono</b><a href="tel:+582122051911">(0212) 205 19 11</a></div></div>
-              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="clock" /></span><div><b>Horario de atención</b><span>Lunes a viernes, de 8:00 a.m. a 5:00 p.m.</span></div></div>
-            </Reveal>
+            </div>
+            <div className="contact-info">
+              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon /></span><div><b>Dirección</b><span>{ADDRESS_LINES[0]}<br />{ADDRESS_LINES[1]}</span></div></div>
+              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="mail" /></span><div><b>Correo</b><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></div></div>
+              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="phone" /></span><div><b>Teléfono</b><a href={`tel:${PHONE_TEL}`}>{PHONE_DISPLAY}</a></div></div>
+              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="clock" /></span><div><b>Horario de atención</b><span>{SCHEDULE}</span></div></div>
+            </div>
           </div>
         </div>
       </section>

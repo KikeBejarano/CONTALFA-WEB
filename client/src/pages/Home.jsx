@@ -26,7 +26,7 @@ export function Home() {
       <Testimonials />
       <section id="cierre" aria-labelledby="cierre-h2" data-screen-label="08 Cierre">
         <div className="wrap wrap--wide">
-          <div className="cierre-cta in" data-reveal>
+          <div className="cierre-cta">
             <h2 id="cierre-h2">Hablemos con calma de su cumplimiento.</h2>
             <p>Cuéntenos sobre su empresa y le mostraremos, sin compromiso, cómo podemos asumir su back office con el rigor de seis décadas.</p>
             <div className="actions">

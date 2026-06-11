@@ -1,15 +1,14 @@
 import { Link } from 'react-router-dom';
-import { Reveal } from '../ui/Reveal.jsx';
 
 export function TeamSection() {
   return (
     <section id="equipo" aria-labelledby="equipo-h2" data-screen-label="Equipo">
       <div className="wrap wrap--wide">
         <div className="equipo-grid">
-          <Reveal as="figure" className="equipo-foto">
+          <figure className="equipo-foto">
             <img src="/assets/img/corp-7433853.jpg" alt="Equipo de Contalfa trabajando en la oficina" width="1300" height="900" loading="lazy" />
-          </Reveal>
-          <Reveal className="equipo-copy">
+          </figure>
+          <div className="equipo-copy">
             <span className="overline">Cercanía</span>
             <h2 id="equipo-h2">Detrás de cada cifra hay un equipo que usted conoce por su nombre.</h2>
             <p>No somos un portal ni un centro de llamadas. Trabajamos cerca de usted: un interlocutor fijo que entiende su empresa y le responde con criterio, no con formularios.</p>
@@ -19,7 +18,7 @@ export function TeamSection() {
               <li>Respuestas claras, en lenguaje de negocio y no en jerga fiscal.</li>
             </ul>
             <p className="equipo-mas"><Link className="link" to="/nosotros">Conocer la firma <span className="arr" aria-hidden="true">→</span></Link></p>
-          </Reveal>
+          </div>
         </div>
       </div>
     </section>

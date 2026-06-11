@@ -1,10 +1,6 @@
 @import './legacy-modelo.css';
 @import './legacy-paginas.css';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .field-error {
   color: #9b1c1c;
   font-size: 13px;
@@ -69,18 +65,12 @@ body.menu-open {
   overflow: hidden;
 }
 
-/* El trigger "Servicios" es un <button>; con preflight de Tailwind desactivado hay que
-   neutralizar los estilos nativos para que se vea como un enlace de navegación. */
+/* El trigger "Servicios" es un <button>; se neutralizan los estilos nativos para que
+   se vea como un enlace de navegación. */
 .nav .dd > button {
   background: none;
   border: 0;
   cursor: pointer;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-reveal {
-    animation: none !important;
-  }
 }
 
 /* Botón flotante de WhatsApp. z-index 900: por debajo del header (1000) y del

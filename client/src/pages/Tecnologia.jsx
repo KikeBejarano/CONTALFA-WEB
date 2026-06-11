@@ -2,7 +2,6 @@ import { CTABand } from '../components/sections/CTABand.jsx';
 import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { Card } from '../components/ui/Card.jsx';
-import { Reveal } from '../components/ui/Reveal.jsx';
 import { seo } from '../data/seo.js';
 
 const systems = [
@@ -21,21 +20,21 @@ export function Tecnologia() {
       <section className="page-section">
         <div className="wrap">
           <div className="split split--media">
-            <Reveal className="prose">
+            <div className="prose">
               <span className="kicker">Ingeniería propia</span>
               <h2>El software lo construimos nosotros.</h2>
               <p>La eficiencia, la seguridad y la solidez de un proceso contable solo se consolidan a través de la innovación. Por eso, a lo largo de los años, plasmamos nuestro conocimiento y experiencia en una serie de sistemas informáticos propios.</p>
               <p>No adaptamos un paquete genérico a la fuerza ni dependemos de un proveedor externo para resolver lo que cambia cada año en el país. Cuando la norma se mueve, ajustamos el sistema.</p>
-            </Reveal>
-            <Reveal as="figure" className="media">
+            </div>
+            <figure className="media">
               <img src="/assets/img/corp-6949934.jpg" alt="Tecnología contable de Contalfa" width="1300" height="900" loading="lazy" />
-            </Reveal>
+            </figure>
           </div>
         </div>
       </section>
       <section className="page-section page-section--mist">
         <div className="wrap">
-          <div className="section-head in" data-reveal>
+          <div className="section-head">
             <span className="overline">Sistemas propios</span>
             <h2 className="t-h2-display">Cinco sistemas, un mismo criterio.</h2>
           </div>

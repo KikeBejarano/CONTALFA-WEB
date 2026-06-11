@@ -75,8 +75,8 @@ Respuesta estándar: `{ ok: boolean, errors: { campo: mensaje } }`.
 
 ## Despliegue
 
-- **Cliente**: `npm run build` → servir `client/dist/` desde un host estático/CDN, con rewrite de todas las rutas a `index.html` (SPA). Configurar CSP a nivel de host (helmet solo cubre `/api/*`).
-- **Server**: `npm start` con `NODE_ENV=production` y el `.env` completo. Fijar `ALLOWED_ORIGINS` a los dominios reales y `TRUST_PROXY` al nº de proxies (1 si hay un Nginx/CDN delante).
+- **Cliente**: `npm run build` con `VITE_API_URL` apuntando al origen del API (p.ej. `https://contalfa-api.onrender.com`) → servir `client/dist/` desde un host estático. **No** configurar rewrite SPA de todas las rutas a `index.html`: el build emite HTML prerenderizado por ruta (`ruta/index.html` + `ruta.html` + `404.html`); basta servir los archivos tal cual (IIS ya viene cubierto por el `web.config` incluido en `dist/`). Configurar CSP a nivel de host (helmet solo cubre `/api/*`).
+- **Server** (Render o similar): `npm start` con el `.env` completo y, explícitamente, `NODE_ENV=production` (activa el fail-fast si faltan variables SMTP). Fijar `ALLOWED_ORIGINS` a los dominios reales y `TRUST_PROXY=1` si hay un proxy/CDN delante (en Render siempre lo hay; con `0`, el rate-limit vería una sola IP para todo el mundo).
 
 ## Rutas
 

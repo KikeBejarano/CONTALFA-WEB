@@ -2,7 +2,6 @@ import { CTABand } from '../components/sections/CTABand.jsx';
 import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { Card } from '../components/ui/Card.jsx';
-import { Reveal } from '../components/ui/Reveal.jsx';
 import { seo } from '../data/seo.js';
 
 export function Nosotros() {
@@ -13,16 +12,16 @@ export function Nosotros() {
       <section className="page-section">
         <div className="wrap">
           <div className="split">
-            <Reveal className="prose">
+            <div className="prose">
               <h2>Quiénes somos</h2>
               <p>Contalfa nació con una convicción simple: una empresa crece cuando deja de invertir su tiempo en lo transaccional y lo dedica a entender su mercado y a mejorar su operación. Ese ha sido nuestro oficio durante más de seis décadas.</p>
               <p>A lo largo de más de sesenta años hemos atendido a más de 1.000 empresas en Caracas y en todo el país, consolidando una práctica que combina el rigor profesional con tecnología propia.</p>
               <p>Hoy somos un solo responsable del <strong>back office</strong> de nuestros clientes: contabilidad, impuestos, nómina y derecho corporativo, coordinados de verdad bajo un mismo techo.</p>
-            </Reveal>
-            <Reveal as="figure" className="media media--tall">
+            </div>
+            <figure className="media media--tall">
               <img src="/assets/img/corp-7433853.jpg" alt="Equipo Contalfa" width="1300" height="900" loading="lazy" />
               <figcaption>Contalfa · Caracas</figcaption>
-            </Reveal>
+            </figure>
           </div>
         </div>
       </section>
@@ -37,7 +36,7 @@ export function Nosotros() {
       </section>
       <section className="page-section">
         <div className="wrap">
-          <div className="section-head in" data-reveal>
+          <div className="section-head">
             <span className="overline">Cómo trabajamos</span>
             <h2 className="t-h2-display">Nuestros valores, en cada cierre.</h2>
           </div>

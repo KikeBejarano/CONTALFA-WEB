@@ -170,11 +170,12 @@ El proyecto está **bien construido en lo esencial**: seguridad madura, base de 
 ~~1. Prerender/SSG por ruta~~ → ✅ resuelto el 2026-06-10 (ver abajo).
 ~~2. CI mínimo~~ → ✅ resuelto: `.github/workflows/ci.yml` (lint server+client, tests, build con prerender en cada push/PR).
 
+~~4. Decisión Tailwind vs CSS legacy~~ → ✅ resuelto el 2026-06-11: Tailwind **eliminado** (uso real medido: 0 de 232 `className`; ver Seguimiento 2026-06-11).
+
 1. Imágenes WebP/AVIF con `srcset` (hoy JPG 90-150 KB).
-2. CSP en el host estático/CDN (helmet solo cubre `/api/*`).
+2. CSP en el host estático/CDN (helmet solo cubre `/api/*`) — viable en `web.config` vía `<httpProtocol><customHeaders>`; el JSON-LD inline de `index.html` necesitará hash en `script-src`.
 3. OG image de marca 1200×630 (hoy foto stock compartida).
-4. Decisión Tailwind vs CSS legacy documentada (ADR) + consolidar tokens duplicados.
-5. Menores: title del Home ~80 car., listas de "sistemas propios" en 3 sitios, un `IntersectionObserver` por `<Reveal>`.
+4. Menores: title del Home ~80 car., listas de "sistemas propios" en 3 sitios, jerarquía h2→h4 en panel "Incluye"/TechTeaser, `BreadcrumbList` JSON-LD, dos `<h2>` idénticos en el Home (StatsGrid/Testimonials), fetch del formulario sin timeout, `MAIL_FROM` para SMTP cuyo usuario no es un correo.
 
 ---
 
@@ -193,3 +194,29 @@ Implementado **sin dependencias nuevas** (restricción supply-chain). `npm run b
 
 **Nota deploy:** en URLs desconocidas el fallback SPA devuelve el Home prerenderizado y React lo reemplaza al hidratar (warning de hidratación en consola, inofensivo). Si el host soporta `404.html` (Netlify/GitHub Pages), sirve el NotFound estático y no hay warning.
 
+---
+
+# Seguimiento — 2026-06-11
+
+## Auditoría integral (3 revisores: estructura, frontend, backend)
+
+Veredicto: estructura limpia, 0 vulnerabilidades, 0 dependencias fantasma, 0 secretos versionados, 0 archivos huérfanos. Dos hallazgos graves nuevos, corregidos el mismo día (ver abajo). Hallazgos operativos para el deploy en Render quedan como checklist (abajo).
+
+## Correcciones aplicadas (2026-06-11)
+
+1. **API configurable para producción (era el bloqueante nº 1 del deploy).** El formulario hacía `fetch('/api/contact')` relativo: solo funcionaba con el proxy de Vite en dev; con la web estática en IIS y el API en Render, el POST moría en un 404 del host estático. Nuevo `src/lib/api.js` con `VITE_API_URL` (vacía en dev → proxy; en el build de producción debe apuntar al origen del API). Documentado en `client/.env.example` y README/Despliegue.
+2. **Sistema de animaciones "reveal" eliminado.** Estaba completamente inerte: el guard `html:not(.js)` (pensado para no-JS) quedó activo para siempre porque nada añadía la clase `js` — ~20 IntersectionObservers corrían sin efecto visual alguno. Se eliminó la maquinaria entera (`Reveal.jsx`, `useReveal.js`, atributos `data-reveal`/`stagger`, 3 bloques CSS): mismo aspecto visual, menos JS, y el HTML prerenderizado se muestra completo sin depender de hidratación. Cierra de paso el pendiente "un IntersectionObserver por `<Reveal>`".
+3. **Datos de contacto centralizados en `data/contact.js`** (correo, teléfono, dirección, horario, WhatsApp): Footer y Contacto los consumen de ahí. Excepción documentada: el JSON-LD de `index.html` (plantilla estática) los duplica — actualizar a mano si cambian.
+4. **Select de servicios derivado del catálogo** (`data/services.js` → títulos + "Aún no estoy seguro"): de 3 copias manuales a 2 fuentes (catálogo + `VALID_SERVICES` del server, que sigue siendo la allowlist de seguridad y se valida en tests).
+5. **Rutas de servicios y sitemap derivados.** `prerender.mjs` construye las rutas desde `data/services.js` y **genera `dist/sitemap.xml`** desde las mismas canonicals que inyecta (se eliminó `public/sitemap.xml`). Añadir un servicio ahora toca 2 archivos (services.js + validate.js) en vez de 5.
+6. **Tailwind eliminado** (medido: 0 de 232 `className` usaban utilidades; `preflight` ya estaba desactivado y los tokens duplicaban el `:root` del CSS propio). Fuera `tailwindcss`, `autoprefixer`, `postcss`, ambos configs y las directivas; `.sr-only` ya era propio (index.css). Verificado: 0 restos `--tw-` en el bundle, mismo CSS de salida (~31 KB).
+
+**Verificación:** lint client+server limpios · 24/24 tests · build completo con prerender y sitemap (9 URLs) · select del formulario idéntico al anterior en el HTML prerenderizado · botón WhatsApp en 18/18 HTML · cero `data-reveal` en la salida.
+
+## Checklist de deploy (hallazgos operativos de la auditoría — pendientes hasta el deploy)
+
+- **Render (API):** `TRUST_PROXY=1` obligatorio (con `0`, el rate-limit ve una sola IP global: 429 para usuarios legítimos al 10º envío del sitio). `NODE_ENV=production` explícito (activa el fail-fast SMTP). Considerar `transporter.verify()` al arrancar: hoy health reporta `mail: ready` con solo que existan las 5 variables — una contraseña errada despliega "verde" y cada lead daría 500.
+- **Build del cliente:** definir `VITE_API_URL` con el origen real del API.
+- **IIS:** la caché de 1 año de `web.config` cubre `/assets` completo, incluidas fotos sin hash en el nombre — si se reemplaza una foto, renombrarla (o mover las imágenes fuera de `/assets`).
+- **Tests pendientes que importan:** las ramas 200-éxito y 500-fallo de `routes/contact.js` no tienen cobertura (no hay seam para inyectar `sendLead`; encaja con el patrón `overrides` de `createApp`).
+- Menor: desplegable "Servicios" abre por `:hover/:focus-within` (CSS) sin sincronizar `aria-expanded` (React); honeypot `empresa_url` del server no existe como campo en el cliente.

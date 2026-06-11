@@ -1,4 +1,3 @@
-import { Reveal } from '../ui/Reveal.jsx';
 import { SectionHead } from '../ui/SectionHead.jsx';
 
 const problems = [
@@ -14,14 +13,14 @@ export function ProblemCards() {
         <SectionHead id="problema-h2" overline="Lo que está en juego" title="El riesgo rara vez avisa. Cuando lo hace, ya es un reparo.">
           Para quien firma los estados financieros, una omisión no es un detalle: es una contingencia. Nuestro oficio es que usted nunca tenga que averiguarlo de la forma difícil.
         </SectionHead>
-        <Reveal className="prob-grid" stagger>
+        <div className="prob-grid">
           {problems.map(([title, text]) => (
             <div className="prob-card" key={title}>
               <div className="ph"><h3>{title}</h3></div>
               <p>{text}</p>
             </div>
           ))}
-        </Reveal>
+        </div>
       </div>
     </section>
   );

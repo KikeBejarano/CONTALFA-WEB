@@ -32,7 +32,7 @@ export function ProcessTimeline({ compact = false }) {
         <SectionHead id="proceso-h2" overline="Cómo trabajamos" title="Hay método detrás de la tranquilidad.">
           Un acompañamiento ordenado, del primer diagnóstico al cumplimiento sostenido.
         </SectionHead>
-        <div className="proc in" id="proc" ref={ref} data-reveal>
+        <div className="proc" id="proc" ref={ref}>
           <div className="proc-line" aria-hidden="true"><span className="fill" style={{ width: `${progress * 100}%` }}></span></div>
           {steps.map(([title, text], index) => (
             <div className={`proc-step ${index < litCount ? 'lit' : ''}`} key={title}>

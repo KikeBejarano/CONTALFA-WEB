@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ADDRESS_LINES, CONTACT_EMAIL, PHONE_DISPLAY, PHONE_TEL } from '../../data/contact.js';
 import { services } from '../../data/services.js';
 
 export function Footer() {
@@ -10,10 +11,10 @@ export function Footer() {
             <div className="wm"><img src="/assets/logos/alfa_2.png" alt="" width="859" height="559" /><span>CONT<b>ALFA</b></span></div>
             <p className="foot-tag">Firma contable, fiscal, de nómina y derecho corporativo para empresas venezolanas. Desde 1964.</p>
             <address className="foot-addr">
-              C.C. Macaracuay Plaza, Piso 3, Torre B<br />
-              Urb. Macaracuay, Caracas<br />
-              <a href="mailto:info@contalfa.com">info@contalfa.com</a><br />
-              <a href="tel:+582122051911">(0212) 205 19 11</a>
+              {ADDRESS_LINES[0]}<br />
+              {ADDRESS_LINES[1]}<br />
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a><br />
+              <a href={`tel:${PHONE_TEL}`}>{PHONE_DISPLAY}</a>
             </address>
             <p className="foot-social"><a href="https://www.instagram.com/contalfa/" target="_blank" rel="noopener noreferrer">Síguenos en Instagram →</a></p>
           </div>

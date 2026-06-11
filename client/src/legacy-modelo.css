@@ -275,13 +275,6 @@ main{display:block;}
 .foot-bottom{border-top:1px solid var(--navy-700);margin-top:var(--space-8);padding-top:var(--space-5);
   font-size:14px;color:var(--on-dark-muted);display:flex;justify-content:space-between;gap:var(--space-4);flex-wrap:wrap;}
 
-/* ═══════ REVEAL (entrada) ═══════ */
-[data-reveal]{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease);}
-[data-reveal].in{opacity:1;transform:none;}
-[data-reveal-stagger] > *{opacity:0;transform:translateY(16px);
-  transition:opacity .55s var(--ease),transform .55s var(--ease);}
-[data-reveal-stagger].in > *{opacity:1;transform:none;}
-
 /* ═══════ RESPONSIVE ═══════ */
 @media (max-width:1040px){
 }
@@ -305,19 +298,14 @@ main{display:block;}
 /* ═══════ REDUCED MOTION (§10) ═══════ */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important;}
-  [data-reveal],[data-reveal-stagger] > *{opacity:1!important;transform:none!important;}
 }
 
 /* ═══════════════════════════════════════════════════════════════
    MEJORAS · MODELO ESTÁTICO (v4)
    Quita el logo 3D giratorio (hero) y las partículas (tecnología):
    emblemas estáticos premium, CERO WebGL → carga instantánea y a
-   prueba de fallos para presentar. Reveal visible aunque el JS no cargue.
+   prueba de fallos para presentar.
    ═══════════════════════════════════════════════════════════════ */
-
-/* — Reveal a prueba de fallos: si el JS no marcó <html class="js">, todo visible — */
-html:not(.js) [data-reveal],
-html:not(.js) [data-reveal-stagger] > *{opacity:1 !important;transform:none !important;}
 
 /* — Header: símbolo un punto más presente — */
 .logo .logo-sym{height:34px;}

@@ -3,7 +3,6 @@ import { CTABand } from '../components/sections/CTABand.jsx';
 import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { Card } from '../components/ui/Card.jsx';
-import { Reveal } from '../components/ui/Reveal.jsx';
 import { getService, services } from '../data/services.js';
 import { NotFound } from './NotFound.jsx';
 
@@ -28,38 +27,38 @@ export function ServiceDetail() {
       <section className="page-section">
         <div className="wrap">
           <div className="split">
-            <Reveal className="prose">
+            <div className="prose">
               {service.intro.map((text) => <p key={text}>{text}</p>)}
               <h2>Para quién es</h2>
               <p>{service.forWhom}</p>
-            </Reveal>
-            <Reveal as="aside" className="split-aside">
+            </div>
+            <aside className="split-aside">
               <div className="panel">
                 <h4>Incluye</h4>
                 <ul className="checks">{service.includes.map((item) => <li key={item}>{item}</li>)}</ul>
               </div>
-            </Reveal>
+            </aside>
           </div>
         </div>
       </section>
       <section className="page-section page-section--mist">
         <div className="wrap">
           <div className="split split--media">
-            <Reveal as="figure" className="media">
+            <figure className="media">
               <img src={service.image} alt={service.imageAlt} width="1300" height="900" loading="lazy" />
-            </Reveal>
-            <Reveal className="prose">
+            </figure>
+            <div className="prose">
               <span className="kicker">Cercanía</span>
               <h2>{service.closenessTitle}</h2>
               <p>{service.closenessText}</p>
               <ul className="checks">{service.closeness.map((item) => <li key={item}>{item}</li>)}</ul>
-            </Reveal>
+            </div>
           </div>
         </div>
       </section>
       <section className="page-section">
         <div className="wrap">
-          <div className="section-head in" data-reveal>
+          <div className="section-head">
             <span className="overline">Otros servicios</span>
             <h2 className="t-h2-display">Bajo un mismo criterio y un mismo responsable.</h2>
           </div>
@@ -76,7 +75,7 @@ export function ServiceDetail() {
       </section>
       <section className="page-section page-section--mist">
         <div className="wrap">
-          <div className="section-head in" data-reveal>
+          <div className="section-head">
             <span className="overline">{service.detailOverline}</span>
             <h2 className="t-h2-display">{service.detailTitle}</h2>
             {service.detailText && <p>{service.detailText}</p>}
