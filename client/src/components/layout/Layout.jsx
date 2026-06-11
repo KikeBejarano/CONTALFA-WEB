@@ -4,6 +4,7 @@ import { Footer } from './Footer.jsx';
 import { Header } from './Header.jsx';
 import { MobileNav } from './MobileNav.jsx';
 import { SkipLink } from './SkipLink.jsx';
+import { WhatsAppButton } from '../ui/WhatsAppButton.jsx';
 
 export function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -32,6 +33,7 @@ export function Layout({ children }) {
       <MobileNav open={menuOpen} setOpen={setMenuOpen} />
       <main id="main" ref={mainRef} tabIndex={-1}>{children}</main>
       <Footer />
+      <WhatsAppButton />
       <div ref={announceRef} aria-live="polite" aria-atomic="true" className="sr-only" />
     </>
   );

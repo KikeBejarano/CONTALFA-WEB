@@ -82,3 +82,38 @@ body.menu-open {
     animation: none !important;
   }
 }
+
+/* Botón flotante de WhatsApp. z-index 900: por debajo del header (1000) y del
+   menú móvil (999) para que el menú abierto lo cubra. */
+.whatsapp-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  box-shadow: var(--shadow-3);
+  transition: background .18s var(--ease), transform .18s var(--ease);
+}
+
+.whatsapp-fab:hover {
+  background: #1ebe5b;
+  transform: translateY(-2px);
+}
+
+.whatsapp-fab:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-3), var(--focus-ring);
+}
+
+@media print {
+  .whatsapp-fab {
+    display: none;
+  }
+}
