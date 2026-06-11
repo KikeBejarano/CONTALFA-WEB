@@ -8,7 +8,7 @@ export function CTABand({ title = 'Hablemos con calma de su cumplimiento.', text
         <h2>{title}</h2>
         <p>{text}</p>
         <div className="actions">
-          <Button to="/contacto" variant="primary-on-dark">Agendar un diagnóstico</Button>
+          <Button to="/contacto" variant="primary-on-dark">Agendar una llamada</Button>
           <Link className="link link--on-dark" to={secondaryTo}>{secondaryText} <span className="arr" aria-hidden="true">→</span></Link>
         </div>
       </div>

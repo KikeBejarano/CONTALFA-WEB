@@ -11,7 +11,7 @@ export function Hero() {
             <h1 id="hero-h1">Seis décadas cuidando las finanzas de las empresas venezolanas.</h1>
             <p className="lede">Outsourcing contable, impuestos, nómina y derecho corporativo, con tecnología propia. Más de 1.000 empresas confían su cumplimiento a Contalfa.</p>
             <div className="hero-actions">
-              <Button to="/contacto" variant="primary-on-dark">Agendar un diagnóstico</Button>
+              <Button to="/contacto" variant="primary-on-dark">Agendar una llamada</Button>
               <Link className="link link--on-dark" to="/servicios">Ver nuestros servicios <span className="arr" aria-hidden="true">→</span></Link>
             </div>
           </div>

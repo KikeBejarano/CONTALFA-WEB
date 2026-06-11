@@ -90,7 +90,7 @@ export function Header({ menuOpen, setMenuOpen }) {
           <Link to="/contacto" aria-current={topCurrent('/contacto')}>Contacto</Link>
         </nav>
         <div className="header-cta">
-          <Link className="btn btn-primary" to="/contacto">Agendar un diagnóstico</Link>
+          <Link className="btn btn-primary" to="/contacto">Agendar una llamada</Link>
           <button
             className="menu-toggle"
             id="menu-toggle"

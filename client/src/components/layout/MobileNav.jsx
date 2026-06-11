@@ -65,7 +65,7 @@ export function MobileNav({ open, setOpen }) {
         <li><Link to="/nosotros">Nosotros</Link></li>
         <li><Link to="/contacto">Contacto</Link></li>
       </ul>
-      <div className="wrap"><Link className="btn btn-primary" to="/contacto">Agendar un diagnóstico</Link></div>
+      <div className="wrap"><Link className="btn btn-primary" to="/contacto">Agendar una llamada</Link></div>
     </nav>
   );
 }

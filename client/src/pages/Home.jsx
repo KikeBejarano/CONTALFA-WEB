@@ -30,7 +30,7 @@ export function Home() {
             <h2 id="cierre-h2">Hablemos con calma de su cumplimiento.</h2>
             <p>Cuéntenos sobre su empresa y le mostraremos, sin compromiso, cómo podemos asumir su back office con el rigor de seis décadas.</p>
             <div className="actions">
-              <Link className="btn btn-primary" to="/contacto">Agendar un diagnóstico</Link>
+              <Link className="btn btn-primary" to="/contacto">Agendar una llamada</Link>
               <Link className="link" to="/contacto">Escribir a la firma <span className="arr" aria-hidden="true">→</span></Link>
             </div>
           </div>

@@ -150,6 +150,9 @@ section{padding-block:var(--section-pad-y);position:relative;}
 #mobile-nav .m-label{font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--muted);padding:16px 0 6px;}
 #mobile-nav .btn{margin:var(--space-4) 0;width:100%;}
+/* `#mobile-nav a` (arriba) pinta los enlaces de --ink, los vuelve block y les quita el
+   padding lateral; su ID le gana a `.btn-primary`. Restaurar el aspecto de botón del CTA. */
+#mobile-nav .btn-primary{color:var(--on-dark);display:flex;padding:13px 26px;border-bottom:none;}
 
 main{display:block;}
 
