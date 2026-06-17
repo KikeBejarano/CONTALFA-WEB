@@ -22,6 +22,9 @@ export default defineType({
     defineField({name: 'closenessTitle', title: 'Cercanía · título', type: 'string'}),
     defineField({name: 'closenessText', title: 'Cercanía · texto', type: 'text', rows: 3}),
     defineField({name: 'closeness', title: 'Cercanía · puntos', type: 'array', of: [defineArrayMember({type: 'string'})]}),
+    defineField({name: 'detailOverline', title: 'Detalle · sobretítulo', type: 'string'}),
+    defineField({name: 'detailTitle', title: 'Detalle · título', type: 'string'}),
+    defineField({name: 'detailText', title: 'Detalle · texto', type: 'text', rows: 2}),
     defineField({
       name: 'detailCards',
       title: 'Modalidades / detalle',
