@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { sanity } from './sanity.js';
-import { QUERIES, mapServicio, mapTestimonios, mapSystems, mapNosotros, overlay } from './content-transforms.js';
+import { QUERIES, mapServicio, mapTestimonios, mapSystems, mapNosotros, mapSiteImages, overlay } from './content-transforms.js';
 import { services as localServices } from '../data/services.js';
 import {
   CONTACT_EMAIL, PHONE_DISPLAY, PHONE_TEL, ADDRESS_LINES, SCHEDULE, WHATSAPP_NUMBER,
@@ -73,4 +73,8 @@ export function useContact() {
 
 export function useNosotros(fallback) {
   return useSanityData(QUERIES.nosotros, (n) => mapNosotros(n) || fallback, fallback);
+}
+
+export function useSiteImages(fallback) {
+  return useSanityData(QUERIES.imagenes, (r) => overlay(fallback, mapSiteImages(r)), fallback);
 }

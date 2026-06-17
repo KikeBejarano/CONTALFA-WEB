@@ -99,6 +99,9 @@ docs.push({
   ],
 })
 
+// Documento vacío de "Fotos del sitio": el cliente sube las imágenes desde el Studio.
+docs.push({_id: 'imagenesSitio', _type: 'imagenesSitio'})
+
 Object.entries(seo).forEach(([pagina, v]) => {
   docs.push({_id: `seo-${pagina}`, _type: 'seo', pagina, title: v.title, description: v.description})
 })

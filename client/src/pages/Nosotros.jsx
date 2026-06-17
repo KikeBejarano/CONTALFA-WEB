@@ -2,14 +2,16 @@ import { CTABand } from '../components/sections/CTABand.jsx';
 import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { Card } from '../components/ui/Card.jsx';
-import { useNosotros } from '../lib/useSanityContent.js';
+import { useNosotros, useSiteImages } from '../lib/useSanityContent.js';
 import { nosotros as localNosotros } from '../data/nosotros.js';
+import { siteImages } from '../data/siteImages.js';
 import { seo } from '../data/seo.js';
 
 const valorColors = [undefined, 'var(--navy)', 'var(--green-ink)'];
 
 export function Nosotros() {
   const nosotros = useNosotros(localNosotros);
+  const images = useSiteImages(siteImages);
   return (
     <>
       <SEO {...seo.nosotros} />
@@ -22,7 +24,7 @@ export function Nosotros() {
               {nosotros.cuerpo.map((parrafo) => <p key={parrafo}>{parrafo}</p>)}
             </div>
             <figure className="media media--tall">
-              <img src="/assets/img/corp-7433853.jpg" alt="Equipo Contalfa" width="1300" height="900" loading="lazy" />
+              <img src={images.fotoEquipo} alt="Equipo Contalfa" width="1300" height="900" loading="lazy" />
               <figcaption>Contalfa · Caracas</figcaption>
             </figure>
           </div>

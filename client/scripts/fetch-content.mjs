@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createClient } from '@sanity/client';
 import {
-  QUERIES, mapServicio, mapTestimonios, mapSystems, mapNosotros, mapSeo,
+  QUERIES, mapServicio, mapTestimonios, mapSystems, mapNosotros, mapSeo, mapSiteImages,
 } from '../src/lib/content-transforms.js';
 
 const client = createClient({
@@ -22,13 +22,14 @@ const header = '// GENERADO por scripts/fetch-content.mjs — no editar a mano.\
 
 async function main() {
   try {
-    const [servicios, testimonios, sistemas, contacto, nosotros, seo] = await Promise.all([
+    const [servicios, testimonios, sistemas, contacto, nosotros, seo, imagenes] = await Promise.all([
       client.fetch(QUERIES.servicios),
       client.fetch(QUERIES.testimonios),
       client.fetch(QUERIES.sistemas),
       client.fetch(QUERIES.contacto),
       client.fetch(QUERIES.nosotros),
       client.fetch(QUERIES.seo),
+      client.fetch(QUERIES.imagenes),
     ]);
     const content = {
       services: (servicios || []).map(mapServicio),
@@ -37,6 +38,7 @@ async function main() {
       contact: contacto || {},
       nosotros: mapNosotros(nosotros),
       seo: mapSeo(seo),
+      siteImages: mapSiteImages(imagenes),
     };
     await writeFile(outFile, `${header}export default ${JSON.stringify(content, null, 2)};\n`, 'utf8');
     console.log(`fetch-content: ${content.services.length} servicios · ${content.testimonials.length} testimonios · ${content.systems.length} sistemas · contacto:${content.contact.email ? 'sí' : 'no'} · nosotros:${content.nosotros ? 'sí' : 'no'} · seo:${Object.keys(content.seo).length}`);

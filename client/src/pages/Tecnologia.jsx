@@ -3,11 +3,13 @@ import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { Card } from '../components/ui/Card.jsx';
 import { seo } from '../data/seo.js';
-import { useSystems } from '../lib/useSanityContent.js';
+import { useSystems, useSiteImages } from '../lib/useSanityContent.js';
 import { systems as localSystems } from '../data/systems.js';
+import { siteImages } from '../data/siteImages.js';
 
 export function Tecnologia() {
   const systems = useSystems(localSystems);
+  const images = useSiteImages(siteImages);
   return (
     <>
       <SEO {...seo.tecnologia} />
@@ -22,7 +24,7 @@ export function Tecnologia() {
               <p>No adaptamos un paquete genérico a la fuerza ni dependemos de un proveedor externo para resolver lo que cambia cada año en el país. Cuando la norma se mueve, ajustamos el sistema.</p>
             </div>
             <figure className="media">
-              <img src="/assets/img/corp-6949934.jpg" alt="Tecnología contable de Contalfa" width="1300" height="900" loading="lazy" />
+              <img src={images.fotoTecnologia} alt="Tecnología contable de Contalfa" width="1300" height="900" loading="lazy" />
             </figure>
           </div>
         </div>

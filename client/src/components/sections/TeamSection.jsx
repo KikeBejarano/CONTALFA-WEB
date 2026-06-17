@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
+import { useSiteImages } from '../../lib/useSanityContent.js';
+import { siteImages } from '../../data/siteImages.js';
 
 export function TeamSection() {
+  const images = useSiteImages(siteImages);
   return (
     <section id="equipo" aria-labelledby="equipo-h2" data-screen-label="Equipo">
       <div className="wrap wrap--wide">
         <div className="equipo-grid">
           <figure className="equipo-foto">
-            <img src="/assets/img/corp-7433853.jpg" alt="Equipo de Contalfa trabajando en la oficina" width="1300" height="900" loading="lazy" />
+            <img src={images.fotoEquipo} alt="Equipo de Contalfa trabajando en la oficina" width="1300" height="900" loading="lazy" />
           </figure>
           <div className="equipo-copy">
             <span className="overline">Cercanía</span>

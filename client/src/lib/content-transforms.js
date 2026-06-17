@@ -16,6 +16,7 @@ export const QUERIES = {
   contacto: `*[_type=="datosContacto"][0]{email, telefonoDisplay, telefonoTel, direccion, horario, whatsapp}`,
   nosotros: `*[_type=="paginaNosotros"][0]{titulo, cuerpo, valores[]{titulo, texto}}`,
   seo: `*[_type=="seo"]{pagina, title, description}`,
+  imagenes: `*[_type=="imagenesSitio"][0]{ "fotoEquipo": fotoEquipo.asset->url, "fotoTecnologia": fotoTecnologia.asset->url }`,
 };
 
 // Portable Text → array de párrafos (strings), como esperan los componentes.
@@ -52,7 +53,7 @@ export function mapServicio(s) {
     intro: ptToParagraphs(s.intro),
     forWhom: s.forWhom,
     includes: s.includes,
-    image: s.imageUrl, // si no hay imagen en Sanity, overlay conserva la local
+    image: optimizeImage(s.imageUrl), // si no hay imagen en Sanity, overlay conserva la local
     imageAlt: s.imageAlt,
     closenessTitle: s.closenessTitle,
     closenessText: s.closenessText,
@@ -78,4 +79,16 @@ export const mapSeo = (rows) =>
 export function mapNosotros(n) {
   if (!n) return null;
   return { titulo: n.titulo, cuerpo: ptToParagraphs(n.cuerpo), valores: n.valores || [] };
+}
+
+// Optimiza URLs de imágenes de Sanity (redimensiona + formato moderno desde su CDN);
+// deja intactas las rutas locales de respaldo (/assets/...).
+export function optimizeImage(url) {
+  return url && url.includes('cdn.sanity.io') ? `${url}?w=1300&h=900&fit=crop&auto=format` : url;
+}
+
+// Fotos del sitio → { fotoEquipo, fotoTecnologia } (URLs optimizadas).
+export function mapSiteImages(r) {
+  if (!r) return {};
+  return { fotoEquipo: optimizeImage(r.fotoEquipo), fotoTecnologia: optimizeImage(r.fotoTecnologia) };
 }
