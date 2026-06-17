@@ -8,4 +8,7 @@ export default defineCliConfig({
     projectId: 'hbsenmzc',
     dataset: 'production',
   },
+  // Subdominio del Studio publicado (npx sanity deploy → https://contalfa.sanity.studio).
+  // Es donde los trabajadores invitados entran a editar. Cambiable redeployando.
+  studioHost: 'contalfa',
 })
