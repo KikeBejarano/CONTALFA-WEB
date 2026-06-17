@@ -45,11 +45,9 @@ jobs:
       - name: Instalar dependencias (client)
         run: npm ci --prefix client
 
-      # Cuando se implemente el horneado de contenido, este paso traerá Sanity al build:
-      # - name: Traer contenido de Sanity
-      #   run: node client/scripts/fetch-content.mjs
-
-      - name: Build del sitio
+      # `npm run build` ejecuta primero scripts/fetch-content.mjs, que trae el contenido
+      # de Sanity y lo hornea en el HTML (con fallback local si Sanity falla).
+      - name: Build del sitio (trae Sanity + prerender)
         run: npm run build --prefix client
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL }}

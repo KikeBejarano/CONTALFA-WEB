@@ -1,4 +1,7 @@
-export const services = [
+import generated from './content.generated.js';
+import { overlay } from '../lib/content-transforms.js';
+
+const fallback = [
   {
     slug: 'outsourcing',
     legacy: 'outsourcing.html',
@@ -131,6 +134,16 @@ export const services = [
     ctaText: 'Revisamos su situación societaria y le decimos, sin compromiso, qué conviene constituir, actualizar o resguardar.',
   },
 ];
+
+// En producción content.generated.js trae los servicios de Sanity (build) y se fusionan
+// sobre el local por slug (overlay conserva lo que Sanity no tenga, p. ej. imágenes).
+// En dev (generated vacío) se usa el local y el overlay en vivo actúa en los componentes.
+export const services = generated.services?.length
+  ? fallback.map((loc) => {
+      const s = generated.services.find((g) => g.slug === loc.slug);
+      return s ? overlay(loc, s) : loc;
+    })
+  : fallback;
 
 export function getService(slug) {
   return services.find((service) => service.slug === slug);

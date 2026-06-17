@@ -51,10 +51,10 @@ Editor → Studio → Publish → webhook → GitHub Actions (build trae Sanity 
                                                                          ~1–2 min → en vivo
 ```
 
-El visitante siempre recibe HTML estático (rápido, SEO intacto). El estado actual del
-repo tiene listo el **modo desarrollo** y la **instalación**; el horneado-en-build y el
-auto-deploy son la capa de producción (workflow en `.github/workflows/deploy.yml`,
-ver §5) y se activan cuando el contenido/diseño esté cerrado.
+El visitante siempre recibe HTML estático (rápido, SEO intacto). **Ambos modos están
+implementados**: el overlay de dev y el horneado-en-build (`client/scripts/fetch-content.mjs`,
+que corre como primer paso de `npm run build`). El auto-deploy es la plantilla
+`.github/workflows/deploy.yml` (necesita los secrets de FTP para activarse).
 
 ---
 
@@ -117,9 +117,11 @@ cd studio && npx sanity cors add http://localhost:5173 --no-credentials
    ```bash
    cd studio && npx sanity deploy        # queda en https://<nombre>.sanity.studio
    ```
-2. **Hornear Sanity en el build**: un paso `fetch-content` trae el contenido al construir y
-   lo escribe en `client/src/data/` (con fallback a lo local). Pendiente de implementar
-   cuando el contenido esté cerrado (es mecánico; los hooks ya tienen las queries/transforms).
+2. **Hornear Sanity en el build** ✅ implementado: `npm run build` ejecuta primero
+   `client/scripts/fetch-content.mjs`, que trae el contenido de Sanity y lo escribe en
+   `client/src/data/content.generated.js`; los `data/*.js` lo fusionan sobre su contenido
+   local (fallback). Si Sanity falla, escribe `{}` y se usa lo local — la web nunca se
+   rompe. `content.generated.js` es un stub `{}` versionado que el build sobreescribe.
 3. **Auto-deploy**: `.github/workflows/deploy.yml` construye y sube `client/dist/` a
    ravatech por FTP. Se dispara con cada push y con un **webhook de Sanity** (al publicar):
    - En GitHub: añadir secrets `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_REMOTE_DIR`.

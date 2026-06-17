@@ -1,4 +1,6 @@
-export const seo = {
+import generated from './content.generated.js';
+
+const fallback = {
   home: {
     title: 'Contalfa — El rigor de seis décadas, al servicio de su tranquilidad fiscal',
     description: 'Firma contable en Caracas desde 1964. Outsourcing contable, impuestos, nómina y derecho corporativo, con tecnología propia. Más de 1.000 empresas confían su cumplimiento a Contalfa.',
@@ -20,3 +22,8 @@ export const seo = {
     description: 'Hablemos de su empresa. Cuéntenos sobre su operación y le mostramos, sin compromiso, cómo asumir su contabilidad, impuestos, nómina y derecho corporativo. Caracas.',
   },
 };
+
+// Sanity (build) puede sobreescribir title/description por página; se fusiona sobre el local.
+export const seo = generated.seo && Object.keys(generated.seo).length
+  ? Object.fromEntries(Object.keys(fallback).map((page) => [page, { ...fallback[page], ...(generated.seo[page] || {}) }]))
+  : fallback;

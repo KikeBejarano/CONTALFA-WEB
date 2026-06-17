@@ -41,6 +41,9 @@ services.forEach((s, i) => {
     closenessTitle: s.closenessTitle,
     closenessText: s.closenessText,
     closeness: s.closeness,
+    detailOverline: s.detailOverline,
+    detailTitle: s.detailTitle,
+    detailText: s.detailText,
     detailCards: (s.detailCards || []).map((c) => ({
       _type: 'modalidad', _key: key(), title: c.title, text: c.text, items: c.items,
     })),
@@ -78,6 +81,22 @@ docs.push({
   direccion: ADDRESS_LINES,
   horario: SCHEDULE,
   whatsapp: WHATSAPP_NUMBER,
+})
+
+docs.push({
+  _id: 'paginaNosotros',
+  _type: 'paginaNosotros',
+  titulo: 'Quiénes somos',
+  cuerpo: toPT([
+    'Contalfa nació con una convicción simple: una empresa crece cuando deja de invertir su tiempo en lo transaccional y lo dedica a entender su mercado y a mejorar su operación. Ese ha sido nuestro oficio durante más de seis décadas.',
+    'A lo largo de más de sesenta años hemos atendido a más de 1.000 empresas en Caracas y en todo el país, consolidando una práctica que combina el rigor profesional con tecnología propia.',
+    'Hoy somos un solo responsable del back office de nuestros clientes: contabilidad, impuestos, nómina y derecho corporativo, coordinados de verdad bajo un mismo techo.',
+  ]),
+  valores: [
+    {_type: 'valor', _key: key(), titulo: 'Rigor', texto: 'Procesos contables confiables y trazables, sostenidos por seis décadas de práctica y por tecnología propia adaptada al marco fiscal venezolano.'},
+    {_type: 'valor', _key: key(), titulo: 'Cercanía', texto: 'Un mismo responsable que conoce su empresa, le anticipa lo que viene y le responde con criterio, en lenguaje de negocio y no en jerga.'},
+    {_type: 'valor', _key: key(), titulo: 'Discreción', texto: 'Resguardamos su información con el cuidado que exige la dirección de una empresa. La confianza se construye con prudencia y constancia.'},
+  ],
 })
 
 Object.entries(seo).forEach(([pagina, v]) => {
