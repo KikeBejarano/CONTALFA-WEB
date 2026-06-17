@@ -139,3 +139,21 @@ cd studio && npx sanity cors add http://localhost:5173 --no-credentials
   `schemaTypes/index.js`, y (si va en la web) crear su hook + query.
 - **Qué puede editar el cliente**: lo define el esquema. Texto e imágenes sí; tipografía,
   colores y layout **no** (viven en el código del sitio) — separación contenido/diseño.
+
+---
+
+## 7. Usuarios y acceso (los trabajadores)
+
+El Studio está publicado en **https://contalfa.sanity.studio** — los trabajadores entran
+ahí desde cualquier navegador (no `localhost`).
+
+- **Invitar a un trabajador**: sanity.io/manage → proyecto `CONTALFA-WEB` → **Members** →
+  *Invite members* → su correo + rol. Recibe un email, acepta, entra con Google/email.
+- **Roles**: **Editor** (crear/editar/publicar contenido, sin tocar configuración) es el
+  correcto para los editores; **Viewer** (solo lectura); **Administrator** (control total:
+  miembros, facturación, settings) solo para el dueño/responsable.
+- **Login**: Google o email. Sin cuenta de GitHub, sin instalar nada.
+- **Plan**: los usuarios **Administrator** son gratis e ilimitados; los asientos
+  **Editor/Viewer** están limitados en el plan Free (ver sanity.io/pricing para el número
+  vigente). Si hacen falta más editores que los del Free, el salto es **Growth (~$15/usuario/mes)**.
+  El proyecto está hoy en **Growth Trial**.
