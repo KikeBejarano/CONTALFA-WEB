@@ -3,7 +3,7 @@ import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { ContactIcon } from '../components/ui/Icons.jsx';
 import { apiUrl } from '../lib/api.js';
-import { ADDRESS_LINES, CONTACT_EMAIL, PHONE_DISPLAY, PHONE_TEL, SCHEDULE } from '../data/contact.js';
+import { useContact } from '../lib/useSanityContent.js';
 import { seo } from '../data/seo.js';
 import { services } from '../data/services.js';
 
@@ -36,6 +36,7 @@ export function Contacto() {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const [statusText, setStatusText] = useState('');
+  const c = useContact();
 
   function update(event) {
     const { name, value } = event.target;
@@ -124,10 +125,10 @@ export function Contacto() {
               </form>
             </div>
             <div className="contact-info">
-              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon /></span><div><b>Dirección</b><span>{ADDRESS_LINES[0]}<br />{ADDRESS_LINES[1]}</span></div></div>
-              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="mail" /></span><div><b>Correo</b><a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></div></div>
-              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="phone" /></span><div><b>Teléfono</b><a href={`tel:${PHONE_TEL}`}>{PHONE_DISPLAY}</a></div></div>
-              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="clock" /></span><div><b>Horario de atención</b><span>{SCHEDULE}</span></div></div>
+              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon /></span><div><b>Dirección</b><span>{c.direccion[0]}<br />{c.direccion[1]}</span></div></div>
+              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="mail" /></span><div><b>Correo</b><a href={`mailto:${c.email}`}>{c.email}</a></div></div>
+              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="phone" /></span><div><b>Teléfono</b><a href={`tel:${c.telefonoTel}`}>{c.telefonoDisplay}</a></div></div>
+              <div className="row"><span className="ic" aria-hidden="true"><ContactIcon type="clock" /></span><div><b>Horario de atención</b><span>{c.horario}</span></div></div>
             </div>
           </div>
         </div>

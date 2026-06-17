@@ -1,12 +1,16 @@
-import { whatsappUrl } from '../../data/contact.js';
+import { useContact } from '../../lib/useSanityContent.js';
+import { WHATSAPP_GREETING } from '../../data/contact.js';
 
-// Botón flotante de click-to-chat. Es un enlace estático (sin JS), así que funciona
-// también en el HTML prerenderizado antes de hidratar.
+// Botón flotante de click-to-chat. El número sale de los datos de contacto (local por
+// defecto, superpuesto desde Sanity en dev). El fallback es síncrono, así que el enlace
+// también es válido en el HTML prerenderizado antes de hidratar.
 export function WhatsAppButton() {
+  const { whatsapp } = useContact();
+  const href = `https://wa.me/${whatsapp}?text=${encodeURIComponent(WHATSAPP_GREETING)}`;
   return (
     <a
       className="whatsapp-fab"
-      href={whatsappUrl()}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Escríbanos por WhatsApp (se abre en una ventana nueva)"

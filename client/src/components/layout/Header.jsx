@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { services } from '../../data/services.js';
+import { useServices } from '../../lib/useSanityContent.js';
 import { useHeaderScroll } from '../../hooks/useHeaderScroll.js';
 import { ChevronDown, MenuIcon } from '../ui/Icons.jsx';
 
@@ -8,6 +8,7 @@ export function Header({ menuOpen, setMenuOpen }) {
   const location = useLocation();
   const { scrolled, onDark } = useHeaderScroll();
   const path = location.pathname;
+  const services = useServices();
 
   const [ddOpen, setDdOpen] = useState(false);
   const ddRef = useRef(null);

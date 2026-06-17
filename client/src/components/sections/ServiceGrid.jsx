@@ -1,8 +1,9 @@
-import { services } from '../../data/services.js';
+import { useServices } from '../../lib/useSanityContent.js';
 import { SectionHead } from '../ui/SectionHead.jsx';
 import { ServiceCard } from '../ui/ServiceCard.jsx';
 
 export function ServiceGrid({ showGateway = false }) {
+  const services = useServices();
   return (
     <section id="servicios" aria-labelledby="servicios-h2" data-screen-label="04 Servicios">
       <div className="wrap wrap--wide">

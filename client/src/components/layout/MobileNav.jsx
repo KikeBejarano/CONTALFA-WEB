@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { services } from '../../data/services.js';
+import { useServices } from '../../lib/useSanityContent.js';
 
 export function MobileNav({ open, setOpen }) {
   const location = useLocation();
   const navRef = useRef(null);
+  const services = useServices();
 
   // Cierra el menú al cambiar de ruta.
   useEffect(() => {

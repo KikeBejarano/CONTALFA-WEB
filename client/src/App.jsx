@@ -4,6 +4,7 @@ import { Layout } from './components/layout/Layout.jsx';
 import { ScrollToTop } from './components/layout/ScrollToTop.jsx';
 
 const Contacto = lazy(() => import('./pages/Contacto.jsx').then((module) => ({ default: module.Contacto })));
+const DemoSanity = lazy(() => import('./pages/DemoSanity.jsx').then((module) => ({ default: module.DemoSanity })));
 const Home = lazy(() => import('./pages/Home.jsx').then((module) => ({ default: module.Home })));
 const NotFound = lazy(() => import('./pages/NotFound.jsx').then((module) => ({ default: module.NotFound })));
 const Nosotros = lazy(() => import('./pages/Nosotros.jsx').then((module) => ({ default: module.Nosotros })));
@@ -24,6 +25,7 @@ function App() {
             <Route path="/tecnologia" element={<Tecnologia />} />
             <Route path="/nosotros" element={<Nosotros />} />
             <Route path="/contacto" element={<Contacto />} />
+            <Route path="/demo-sanity" element={<DemoSanity />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

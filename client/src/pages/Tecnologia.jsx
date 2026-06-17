@@ -3,8 +3,9 @@ import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { Card } from '../components/ui/Card.jsx';
 import { seo } from '../data/seo.js';
+import { useSystems } from '../lib/useSanityContent.js';
 
-const systems = [
+const localSystems = [
   ['ATR', 'Sistema financiero y contable', 'Sistema financiero y contable basado en la web, completamente adaptado a la realidad fiscal venezolana.'],
   ['SICA', 'Sistema de conciliaciones bancarias', 'Sistema de conciliaciones bancarias.'],
   ['SISA', 'Sistema de seguimiento de actividades', 'Sistema de seguimiento de actividades, con señales en pantalla para los supervisores.'],
@@ -13,6 +14,7 @@ const systems = [
 ];
 
 export function Tecnologia() {
+  const systems = useSystems(localSystems);
   return (
     <>
       <SEO {...seo.tecnologia} />

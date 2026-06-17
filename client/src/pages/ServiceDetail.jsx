@@ -3,14 +3,15 @@ import { CTABand } from '../components/sections/CTABand.jsx';
 import { PageHero } from '../components/sections/PageHero.jsx';
 import { SEO } from '../components/layout/SEO.jsx';
 import { Card } from '../components/ui/Card.jsx';
-import { getService, services } from '../data/services.js';
+import { useServices } from '../lib/useSanityContent.js';
 import { NotFound } from './NotFound.jsx';
 
 const colors = ['var(--teal)', 'var(--navy)', 'var(--green-ink)'];
 
 export function ServiceDetail() {
   const { slug } = useParams();
-  const service = getService(slug);
+  const services = useServices();
+  const service = services.find((item) => item.slug === slug);
   if (!service) return <NotFound />;
 
   const related = services.filter((item) => item.slug !== service.slug);
