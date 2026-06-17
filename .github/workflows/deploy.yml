@@ -1,0 +1,64 @@
+name: Deploy a ravatech
+
+# Construye el sitio y lo sube por FTP al hosting (IIS/ravatech). Se dispara con:
+#  - push a main
+#  - el webhook de Sanity al publicar (repository_dispatch · evento sanity-publish)
+#  - manualmente (workflow_dispatch)
+#
+# REQUISITOS antes de activarlo (GitHub → Settings → Secrets and variables → Actions):
+#  Secrets:   FTP_SERVER · FTP_USERNAME · FTP_PASSWORD
+#  Variables: FTP_REMOTE_DIR (carpeta destino, p.ej. /nueva.contalfa.com/)
+#             VITE_API_URL   (origen del API en producción, p.ej. https://contalfa-api.onrender.com)
+#
+# Webhook de Sanity (manage → API → Webhooks) para auto-publicar al editar:
+#   URL: https://api.github.com/repos/KikeBejarano/CONTALFA-WEB/dispatches
+#   Método POST · Header Authorization: Bearer <GitHub token con scope repo>
+#   Body: {"event_type":"sanity-publish"}
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [sanity-publish]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Instalar dependencias (client)
+        run: npm ci --prefix client
+
+      # Cuando se implemente el horneado de contenido, este paso traerá Sanity al build:
+      # - name: Traer contenido de Sanity
+      #   run: node client/scripts/fetch-content.mjs
+
+      - name: Build del sitio
+        run: npm run build --prefix client
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+
+      - name: Subir por FTP a ravatech
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./client/dist/
+          server-dir: ${{ vars.FTP_REMOTE_DIR }}
