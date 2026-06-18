@@ -11,4 +11,8 @@ export default defineCliConfig({
   // Subdominio del Studio publicado (npx sanity deploy → https://contalfa.sanity.studio).
   // Es donde los trabajadores invitados entran a editar. Cambiable redeployando.
   studioHost: 'contalfa',
+  // Sanity v6: id de la aplicación desplegada (evita el prompt en cada deploy).
+  deployment: {
+    appId: 'edq7nlzfcbq7i43o2bng7xfs',
+  },
 })
